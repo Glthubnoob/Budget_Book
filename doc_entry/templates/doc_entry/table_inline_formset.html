@@ -1,0 +1,95 @@
+
+{% load crispy_forms_tags %}
+
+{% load crispy_forms_utils %}
+{% load crispy_forms_field %}
+
+{% specialspaceless %}
+{% if formset_tag %}
+<!-- Legt fest, ob POST oder GET request durchgeführ wird -->
+<form {{ flat_attrs|safe }} method="{{ form_method }}" {% if formset.is_multipart %} enctype="multipart/form-data"
+    {% endif %}>
+    {% endif %}
+    <!-- Wenn post und disable_csrf ist false, dann wird der csrf-token hinzugefügt -->
+    {% if formset_method|lower == 'post' and not disable_csrf %}
+    {% csrf_token %}
+    {% endif %}
+
+    <div>
+        <!-- Keine Ahnung was die management_form macht! -->
+        {{ formset.management_form|crispy }}
+    </div>
+    <div class="row mt-2" style="font-size: 0.8rem;">
+            <div class="form-group col-md-1 mb-0">Location:</div>
+            <div class="form-group col-md-1 mb-0">{{ document.location }}</div>
+        </div>
+    <div class="row" style="font-size: 0.8rem;">
+        <div class="form-group col-md-1 mb-0">Date:</div>
+        <div class="form-group col-md-2 mb-0">{{ document.date_of_purchase|date:"d.m.Y" }}</div>
+    </div>
+    <div class="row" style="font-size: 0.8rem;">
+            <div class="form-group col-md-1 mb-0">Total:</div>
+            <div class="form-group col-md-1 mb-0">{{ document.total }} €</div>
+        </div>
+    <!-- <h5>
+        Datum: <strong>{{ document.date_of_purchase }}</strong>
+        Lokation: <strong>{{ document.location }}</strong>
+        Gesamtbetrag: <strong>{{ document.total }}</strong>
+        Beleg-ID: <strong>{{ document.id }} </strong>
+    </h5> -->
+    <table{% if form_id %} id="{{ form_id }}_table" {% endif%} class="table table-sm">
+        <thead>
+            {% if formset.readonly and not formset.queryset.exists %}
+            {% else %}
+            <tr>
+                {% for field in formset.forms.0 %}
+                {% if field.label and not field.is_hidden %}
+                <!-- Spaltenüberschriften/Label für die Felder -->
+                <th for="{{ field.auto_id }}"
+                    class="control-label {% if field.field.required and not field|is_checkbox %}requiredField{% endif %}">
+                    {{ field.label|safe }}{% if field.field.required and not field|is_checkbox %}<span
+                        class="asteriskField"></span>{% endif %}
+                </th>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endif %}
+        </thead>
+
+        <tbody>
+            <!-- Eingabefelder für neuen Datensatz -->
+            <!-- <tr class="hidden empty-form">
+                {% for field in formset.empty_form %}
+                    {% include 'bootstrap/field.html' with tag="td" form_show_labels=False %}
+                {% endfor %}
+            </tr> -->
+
+            {% for form in formset %}
+            {% if form_show_errors and not form.is_extra %}
+            {% include "bootstrap/errors.html" %}
+            {% endif %}
+            <!-- Hier kommen die bestehenden Zeilen bzw. Datensätze -->
+            <tr id="my-rows">
+                {% for field in form %}
+                {% include 'bootstrap/field.html' with tag="td" form_show_labels=False %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            <!-- <tr class="hidden empty-form">
+                {% for field in formset.empty_form %}
+                {% include 'bootstrap/field.html' with tag="td" form_show_labels=False %}
+                {% endfor %}
+            </tr> -->
+        </tbody>
+        </table>
+
+        {% if inputs %}
+        <div class="form-actions">
+            {% for input in inputs %}
+            {% include "bootstrap/layout/baseinput.html" %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if formset_tag %}
+</form>{% endif %}
+{% endspecialspaceless %}

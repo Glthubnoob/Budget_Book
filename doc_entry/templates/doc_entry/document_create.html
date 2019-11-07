@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h4>{{ page_title }}</h4>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button class="btn btn-primary" type="submit">Save</button>
+  </form>
+
+  <table class="table table-sm">
+    <!-- <thead>
+      <tr>
+        <th scope="col"></th>
+      </tr>
+    </thead> -->
+    <tbody>
+
+      <!-- <hr>
+      <h4>Existing Locations</h4>
+      {% for location in locations %}
+        <tr>
+          <td>{{ location.name }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>   -->
+{% endblock content %}
+  

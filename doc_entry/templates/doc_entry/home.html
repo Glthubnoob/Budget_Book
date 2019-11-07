@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h3>Document Management</h3>
+<a class="btn btn-success mb-2" href="{% url 'document_create' %}"><i class="far fa-plus-square"></i> New</a>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <!-- <th scope="col">#</th> -->
+      <th scope="col">Date</th>
+      <th scope="col">Location</th>
+      <th scope="col">ID</th>
+      <th scope="col">Total</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for document in documents %}
+      <tr>
+        <!-- <th scope="row">{{ document.id }}</th> -->
+        <td>{{ document.date_of_purchase|date:'Y-m-d' }}</td>
+        <td>{{ document.location }}</td>
+        <td>{{ document.id}}</td>
+        <td>{{ document.total }}</td>
+        <td><a href="{% url 'index' document.id %}"><i class="far fa-edit"></i></a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<!-- <a href="#">New Document Entry</a> -->
+{% endblock content %}

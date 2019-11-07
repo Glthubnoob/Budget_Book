@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h4>Document Entry</h4>
+  <form action="" method="POST">
+  {% csrf_token %}
+
+  {% crispy formset %}
+  <button type="submit">Save</button>
+</form>
+{% endblock content %}
+  
